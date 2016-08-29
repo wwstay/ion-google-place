@@ -7,7 +7,8 @@ angular.module('ion-google-place', [])
         '$timeout',
         '$rootScope',
         '$document',
-        function($ionicTemplateLoader, $ionicBackdrop, $ionicPlatform, $q, $timeout, $rootScope, $document) {
+        'uiGmapGoogleMapApi',
+        function($ionicTemplateLoader, $ionicBackdrop, $ionicPlatform, $q, $timeout, $rootScope, $document, uiGmapGoogleMapApi) {
             return {
                 require: '?ngModel',
                 restrict: 'E',
@@ -22,12 +23,19 @@ angular.module('ion-google-place', [])
                     var unbindBackButtonAction;
 
                     scope.locations = [];
-                    var geocoder = new google.maps.Geocoder();
+                    var geocoder;
+                    if (angular.isDefined(uiGmapGoogleMapApi)) {
+                      uiGmapGoogleMapApi.then(function() {
+                        geocoder = new google.maps.Geocoder();
+                      })
+                    } else {
+                      geocoder = new google.maps.Geocoder();
+                    }
                     var searchEventTimeout = undefined;
 
                     scope.displayCurrentLocation = false;
                     scope.currentLocation = scope.currentLocation === "true"? true:false;
-                    
+
                     if(!!navigator.geolocation && scope.currentLocation){
                         scope.displayCurrentLocation = true;
                     }
