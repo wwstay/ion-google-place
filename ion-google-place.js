@@ -16,8 +16,16 @@ angular.module('ion-google-place', [])
                 replace: true,
                 scope: {
                     ngModel: '=?',
+                    address: '=?',
                     geocodeOptions: '=',
                     currentLocation: '@'
+                },
+                controller: function($scope) {
+                  $scope.$watch('ngModel', function(){
+                    if(angular.isDefined($scope.ngModel)){
+                      $scope.address = $scope.ngModel.formatted_address;
+                    }
+                  });
                 },
                 link: function(scope, element, attrs, ngModel) {
                     var unbindBackButtonAction;
